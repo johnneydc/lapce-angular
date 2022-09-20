@@ -1,0 +1,15 @@
+{
+  "name": "lapce-angular",
+  "version": "1.0.0",
+  "author": "Johnney Dela Cruz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/johnneydc/lapce-angular/issues"
+  },
+  "homepage": "https://github.com/johnneydc/lapce-angular#readme",
+  "dependencies": {
+    "v12_language_service": "file:v12_language_service",
+    "@angular/language-server": "^14.2.0",
+    "typescript": "^4.8.3"
+  }
+}
