@@ -6,6 +6,7 @@ use lapce_plugin::{
     },
     register_plugin, LapcePlugin, VoltEnvironment, PLUGIN_RPC,
 };
+use serde::de::Unexpected::Str;
 use serde_json::Value;
 
 #[derive(Default)]
@@ -14,15 +15,19 @@ struct State {}
 register_plugin!(State);
 
 fn initialize(params: InitializeParams) -> Result<()> {
-    let document_selector: DocumentSelector = vec![DocumentFilter {
-        // lsp language id
-        language: Some(String::from("language_id")),
-        // glob pattern
-        pattern: Some(String::from("**/*.{ext1,ext2}")),
-        // like file:
-        scheme: None,
-    }];
-    let mut server_args = vec![];
+    let document_selector: DocumentSelector = vec![
+        DocumentFilter {
+            language: Some(String::from("typescript")),
+            pattern: Some(String::from("**/*.ts")),
+            scheme: None,
+        },
+        DocumentFilter {
+            language: Some(String::from("html")),
+            pattern: Some(String::from("**/*.html")),
+            scheme: None
+        }
+    ];
+    let mut server_args = vec!["--stdio".to_string()];
 
     // Check for user specified LSP server path
     // ```
@@ -91,7 +96,10 @@ fn initialize(params: InitializeParams) -> Result<()> {
 
     // Plugin working directory
     let volt_uri = VoltEnvironment::uri()?;
-    let server_path = Url::parse(&volt_uri)?.join("[filename]")?;
+    let server_path = Url::parse(&volt_uri)?
+        .join("node_modules")?
+        .join(".bin")?
+        .join("ngserver")?;
 
     // if you want to use server from PATH
     // let server_path = Url::parse(&format!("urn:{filename}"))?;
